@@ -28,7 +28,9 @@ std::string hasData(std::string s) {
 
 int main()
 {
-  uWS::Hub h;
+    string out_file_name = "/Users/HARAN/Desktop/Test_Xcode/Udacity/P1/CarND-Extended-Kalman-Filter-Project/data/output.txt";
+
+    uWS::Hub h;
 
   // Create a Kalman Filter instance
   FusionEKF fusionEKF;
@@ -76,7 +78,8 @@ int main()
           		meas_package.raw_measurements_ << px, py;
           		iss >> timestamp;
           		meas_package.timestamp_ = timestamp;
-          } else if (sensor_type.compare("R") == 0) {
+          }
+          else if (sensor_type.compare("R") == 0) {
 
       	  		meas_package.sensor_type_ = MeasurementPackage::RADAR;
           		meas_package.raw_measurements_ = VectorXd(3);
@@ -125,6 +128,8 @@ int main()
     	  estimations.push_back(estimate);
 
     	  VectorXd RMSE = tools.CalculateRMSE(estimations, ground_truth);
+          
+//cout<<"pos error :"<<RMSE[0]<<endl;
 
           json msgJson;
           msgJson["estimate_x"] = p_x;
@@ -137,17 +142,21 @@ int main()
           // std::cout << msg << std::endl;
           ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
 	  
-        }
-      } else {
+        }//if-telemetry
+       
+      }
+
+      else {
         
         std::string msg = "42[\"manual\",{}]";
         ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
       }
     }
-
+    
   });
 
-  // We don't need this since we're not using HTTP but if it's removed the program
+
+    // We don't need this since we're not using HTTP but if it's removed the program
   // doesn't compile :-(
   h.onHttpRequest([](uWS::HttpResponse *res, uWS::HttpRequest req, char *data, size_t, size_t) {
     const std::string s = "<h1>Hello world!</h1>";
